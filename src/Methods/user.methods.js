@@ -136,7 +136,45 @@ const loginUser = async ({email, password}) => {
 
 
 
-const logOutUser = async () => {
+const logOutUser = async (userId) => {
+
+    // Algorithm for logging the user out : 
+
+    // 1. Perform common validations for userId, like : it should not be empty, it should be string, etc.
+    // 2. Now check if the user id is genuine or not, make a db call to find the user by the provided userId.
+    // 3. If the userId is not genuine then throw an error, but if we get the user than modify the cookie values such that the IsLoggedIn cookie should be false and the userId cookie should be set to null or we can delete it.
+    // 4. If all of the above steps are performed successfully, then log the success message.
+
+
+    // Common validations for userId : 
+
+    if(!userId){
+        throw new Error("The UserId is not populated.")
+    }
+
+    if(typeof userId !== "string"){
+        throw new Error("The UserId data-type is not of string type.")
+    }
+
+    if(userId.trim() === ""){
+        throw new Error("The UserId cannot be empty.")
+    }
+
+
+    // Check if the userId is genuine or not :
+
+    const userToCheck = await User.findById(userId);
+
+    if(!userToCheck){
+        throw new Error("The userId is invalid.")
+    }
+
+
+    // The modification of the cookies will be performed by the logout component
+
+    console.log("The userId is Genuine, Now modify the cookies.")
+
+    return userToCheck
 
 }
 
@@ -148,5 +186,6 @@ const getCurrentUser = async () => {
 
 export {
     registerUser,
-    loginUser
+    loginUser,
+    logOutUser
 }

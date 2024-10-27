@@ -69,6 +69,84 @@ const registerUser = async ({name, email, password}) => {
 
 
     console.log("The user is created successfully")
-    return {createdUser}
+    return createdUser
 
+}
+
+
+
+const loginUser = async ({email, password}) => {
+
+
+    // Algorithm for loggin in the user 
+
+    // 1. Get the email & password and make sure that they pass all of the common validations.
+    // 2. check if the email already exists or not, if it does not exists then prompt the user to register first.
+    // 3. But if the email exists then continue further.
+    // 4. Now set the IsloggedIn cookie to true and also set the userId cookie along.
+
+
+
+    // Validation for String type
+
+    if (
+        [email, password].some((field) => typeof field !== "string")
+    ){
+        throw new Error("The Data type should be of String type, Please make sure all of the fields are of String format.")
+    }
+
+
+    // Validation for empty strings
+
+    if (
+        [email, password].some( (field) => field?.trim() === "" )
+    ){
+        throw new Error("You cannot provide empty field values.")
+    }
+
+
+    // Validation for email pattern match will be performed in the login component itself.
+
+
+    // Just for safety purpose, lower the email 
+
+    const lowerEmail = email.toLowerCase();
+
+
+    // Check if the user already exists:
+
+    const existedUser = await User.findOne({
+        email : lowerEmail
+    })
+
+    if (!existedUser) {
+        throw new Error("The user with this email does not exists, Please register yourself first.")
+    }
+
+
+    // The cookies will be set by the login component itself, we will just return the user data
+    // Two cookies should be set, which are : IsLoggedIn to true and userId with the userId whose value will be the _id from the user details.
+
+    console.log("The User login is successfull, now set the cookies.")
+
+    return existedUser
+
+
+}
+
+
+
+const logOutUser = async () => {
+
+}
+
+
+const getCurrentUser = async () => {
+    
+}
+
+
+export {
+    registerUser,
+    loginUser
 }
